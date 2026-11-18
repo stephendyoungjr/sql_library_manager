@@ -6,7 +6,7 @@ const logger = require('morgan');
 const { sequelize } = require('./models');
 const indexRouter = require('./routes/index');
 const booksRouter = require('./routes/books');
-
+// live server
 const app = express();
 
 // View engine for pug templates

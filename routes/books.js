@@ -5,7 +5,7 @@ const { Book } = require('../models');
 const router = express.Router();
 const BOOKS_PER_PAGE = 5;
 
-// Wrap async handlers so rejected promises reach the global error handler
+//rejected promises reach global error handler
 const asyncHandler = (cb) => async (req, res, next) => {
   try {
     await cb(req, res, next);
@@ -14,7 +14,7 @@ const asyncHandler = (cb) => async (req, res, next) => {
   }
 };
 
-// Pull the editable fields from the form, turning blank optional values into null
+// turn blank optional values into null
 const getBookData = (body) => ({
   title: body.title,
   author: body.author,
@@ -34,7 +34,7 @@ router.get('/', asyncHandler(async (req, res) => {
   const search = (req.query.search || '').trim();
   const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
 
-  // Partial, case-insensitive match on title, author, genre and year
+
   const options = {
     order: [['id', 'ASC']],
     limit: BOOKS_PER_PAGE,
@@ -55,7 +55,7 @@ router.get('/', asyncHandler(async (req, res) => {
   const { count, rows: books } = await Book.findAndCountAll(options);
   const totalPages = Math.max(Math.ceil(count / BOOKS_PER_PAGE), 1);
 
-  // A page past the end of the results doesn't exist
+  
   if (page > totalPages) {
     const error = new Error("Sorry! We couldn't find the page you were looking for.");
     error.status = 404;
@@ -77,7 +77,7 @@ router.post('/new', asyncHandler(async (req, res) => {
     await Book.create(data);
     res.redirect('/books');
   } catch (error) {
-    // Show validation messages and keep what the user typed
+
     if (error.name === 'SequelizeValidationError') {
       res.render('new-book', {
         title: 'New Book',
@@ -111,7 +111,7 @@ router.post('/:id', asyncHandler(async (req, res, next) => {
     await book.update(data);
     res.redirect('/books');
   } catch (error) {
-    // Show validation messages and keep what the user typed
+
     if (error.name === 'SequelizeValidationError') {
       res.render('update-book', {
         title: 'Update Book',
