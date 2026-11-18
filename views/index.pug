@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  h1 Books
+  p
+    a.button(href='/books/new') Create New Book
+  form(method='get', action='/books')
+    p
+      label(for='search') Search
+      input#search(name='search', type='text', value=search, placeholder='Title, author, genre or year')
+      input(type='submit', value='Search')
+      if search
+        a.button(href='/books') Clear
+  if books.length
+    table
+      thead
+        tr
+          th Title
+          th Author
+          th Genre
+          th Year
+      tbody
+        each book in books
+          tr
+            td
+              a(href=`/books/${book.id}`)= book.title
+            td= book.author
+            td= book.genre
+            td= book.year
+    if totalPages > 1
+      p
+        each n in Array.from({ length: totalPages }, (_, i) => i + 1)
+          if n === page
+            strong #{n}
+          else
+            a(href=`/books?page=${n}${search ? '&search=' + encodeURIComponent(search) : ''}`)= n
+          |  
+  else
+    p No books matched your search.
